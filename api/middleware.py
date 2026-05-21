@@ -19,9 +19,9 @@ async def add_process_time_header(request: Request, call_next):
 
 
 async def error_handler(request: Request, exc: Exception):
-    """Global exception handler — logs the error and returns a JSON 500."""
+    """Global exception handler — logs the error and returns a generic JSON 500."""
     logger.error("Unhandled exception for %s %s: %s", request.method, request.url, exc, exc_info=exc)
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error", "error": str(exc)},
+        content={"detail": "Internal server error"},
     )

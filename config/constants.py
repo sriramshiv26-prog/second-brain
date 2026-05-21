@@ -52,7 +52,9 @@ EMBEDDING_BATCH_SIZE = 32
 # API
 # ---------------------------------------------------------------------------
 
-API_HOST = os.environ.get("API_HOST", "0.0.0.0")
+# API_HOST defaults to 127.0.0.1 (localhost only) for security.
+# Set API_HOST=0.0.0.0 in .env to expose on all interfaces (development only).
+API_HOST = os.environ.get("API_HOST", "127.0.0.1")
 API_PORT = int(os.environ.get("API_PORT", 5000))
 API_WORKERS = int(os.environ.get("API_WORKERS", 1))
 
