@@ -53,7 +53,7 @@ EMBEDDING_BATCH_SIZE = 32
 # ---------------------------------------------------------------------------
 
 API_HOST = os.environ.get("API_HOST", "0.0.0.0")
-API_PORT = int(os.environ.get("GPU_MACHINE_PORT", 5000))
+API_PORT = int(os.environ.get("API_PORT", 5000))
 API_WORKERS = int(os.environ.get("API_WORKERS", 1))
 
 # ---------------------------------------------------------------------------

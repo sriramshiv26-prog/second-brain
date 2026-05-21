@@ -35,17 +35,15 @@ def init_graph_db(db_path=None):
 
 
 def get_graph_db(db_path=None):
-    """Return a cached SQLite connection, creating it on first call.
+    """Return a new SQLite connection, thread-safe for use in FastAPI.
 
-    Uses a function-level attribute as a simple cache so the same connection
-    is reused across calls within the same process.
+    Opens a fresh connection on each call instead of caching, ensuring
+    thread-safety in async contexts.
 
     Args:
-        db_path: Optional path override (only used on first call).
+        db_path: Optional path override.
 
     Returns:
         sqlite3.Connection with row_factory set to sqlite3.Row.
     """
-    if not hasattr(get_graph_db, "_connection"):
-        get_graph_db._connection = init_graph_db(db_path)
-    return get_graph_db._connection
+    return init_graph_db(db_path)

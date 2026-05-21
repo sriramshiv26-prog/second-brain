@@ -1,6 +1,7 @@
 """Second Brain FastAPI application entry point."""
 
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,7 +15,23 @@ from storage.graph_db import init_graph_db
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Second Brain API", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage FastAPI application lifecycle."""
+    # Startup
+    logger.info("Starting Second Brain API — initialising databases...")
+    init_graph_db()
+    init_chroma()
+    logger.info("Databases ready.")
+
+    yield
+
+    # Shutdown
+    logger.info("Second Brain API shutting down.")
+
+
+app = FastAPI(title="Second Brain API", version="0.1.0", lifespan=lifespan)
 
 # ---------------------------------------------------------------------------
 # Middleware
@@ -36,26 +53,6 @@ app.exception_handler(Exception)(error_handler)
 # ---------------------------------------------------------------------------
 
 app.include_router(health_router)
-
-# ---------------------------------------------------------------------------
-# Lifecycle events
-# ---------------------------------------------------------------------------
-
-
-@app.on_event("startup")
-async def startup():
-    """Initialize databases on server startup."""
-    logger.info("Starting Second Brain API — initialising databases...")
-    init_graph_db()
-    init_chroma()
-    logger.info("Databases ready.")
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    """Log clean shutdown."""
-    logger.info("Second Brain API shutting down.")
-
 
 # ---------------------------------------------------------------------------
 # Main entry point

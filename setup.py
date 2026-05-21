@@ -25,6 +25,12 @@ setup(
         "aiofiles==23.2.1",
         "httpx==0.25.2",
     ],
+    extras_require={
+        "dev": [
+            "pytest==7.4.3",
+            "pytest-asyncio==0.23.2",
+        ],
+    },
     entry_points={
         "console_scripts": [
             "sb=cli.sb_cli:main",

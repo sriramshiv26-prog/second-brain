@@ -3,13 +3,7 @@
 import sqlite3
 import tempfile
 import os
-import sys
 from pathlib import Path
-
-import pytest
-
-# Ensure project root is on path
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def test_graph_db_initialization():

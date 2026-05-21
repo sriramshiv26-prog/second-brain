@@ -1,6 +1,6 @@
 """Health and status endpoints for the Second Brain API."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter
 
@@ -23,7 +23,7 @@ def health_check():
         version="0.1.0",
         documents_indexed=documents_indexed,
         entities_count=entities_count,
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(timezone.utc),
     )
 
 

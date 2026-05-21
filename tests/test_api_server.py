@@ -1,13 +1,6 @@
 """Tests for the FastAPI server health and status endpoints."""
 
-import sys
-from pathlib import Path
-
-import pytest
 from fastapi.testclient import TestClient
-
-# Ensure project root is on path
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from api.server import app
 
