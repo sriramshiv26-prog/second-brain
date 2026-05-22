@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: second-brain-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+    volumes:
+      - ./api:/app/api
+      - ./config:/app/config
+      - ./storage:/app/storage
+      - ./process:/app/process
+    depends_on:
+      - chroma
+    networks:
+      - second-brain
+
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: second-brain-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - second-brain
+
+  chroma:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: second-brain-chroma
+    ports:
+      - "8001:8000"
+    environment:
+      - CHROMA_API_IMPL=rest
+    networks:
+      - second-brain
+
+networks:
+  second-brain:
+    driver: bridge
