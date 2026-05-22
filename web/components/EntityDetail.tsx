@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import type { Entity } from '@/lib/types';
 
 interface EntityDetailProps {

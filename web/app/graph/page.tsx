@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import dynamicImport from 'next/dynamic';
 import SearchForm from '@/components/SearchForm';
-import GraphVisualization from '@/components/GraphVisualization';
 import { graphAPI } from '@/lib/api';
 
-export default function GraphPage() {
+const D3GraphVisualization = dynamicImport(() => import('@/components/D3GraphVisualization'), {
+  ssr: false,
+});
+
+function GraphPageContent() {
   const [entityId, setEntityId] = useState('');
   const [depth, setDepth] = useState(2);
 
@@ -68,7 +72,7 @@ export default function GraphPage() {
             </div>
           )}
           {data && (
-            <GraphVisualization
+            <D3GraphVisualization
               data={{
                 nodes: data.nodes.map((n) => ({
                   id: n.id,
@@ -90,5 +94,13 @@ export default function GraphPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function GraphPage() {
+  return (
+    <Suspense fallback={<div className="py-8 text-center">Loading...</div>}>
+      <GraphPageContent />
+    </Suspense>
   );
 }

@@ -1,12 +1,13 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import SearchForm from '@/components/SearchForm';
 import SearchResults from '@/components/SearchResults';
 import { searchAPI } from '@/lib/api';
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
 
@@ -56,5 +57,13 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="py-8 text-center">Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }

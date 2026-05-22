@@ -117,7 +117,8 @@ export default function AdvancedSearchResults({
           </div>
 
           <div className="text-sm text-gray-600 pt-8">
-            {filteredResults.length} results
+            {filteredResults.length}
+            {totalResults && totalResults > filteredResults.length && `/${totalResults}`} results
             {executionTime && ` in ${executionTime.toFixed(2)}ms`}
           </div>
         </div>
