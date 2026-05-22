@@ -13,10 +13,10 @@ class EmbeddingPipeline:
     def embed_single(self, text: str) -> List[float]:
         """Embed a single text."""
         try:
-            result = embed.embed_text(
+            result = embed.text(
                 texts=[text],
                 model=self.model_name,
-                task="search_document"
+                task_type="search_document"
             )
             return result["embeddings"][0]
         except Exception as e:
@@ -26,10 +26,10 @@ class EmbeddingPipeline:
     def embed_batch(self, texts: List[str]) -> List[List[float]]:
         """Embed multiple texts."""
         try:
-            result = embed.embed_text(
+            result = embed.text(
                 texts=texts,
                 model=self.model_name,
-                task="search_document"
+                task_type="search_document"
             )
             return result["embeddings"]
         except Exception as e:
@@ -39,10 +39,10 @@ class EmbeddingPipeline:
     def embed_query(self, query: str) -> List[float]:
         """Embed a search query."""
         try:
-            result = embed.embed_text(
+            result = embed.text(
                 texts=[query],
                 model=self.model_name,
-                task="search_query"
+                task_type="search_query"
             )
             return result["embeddings"][0]
         except Exception as e:
