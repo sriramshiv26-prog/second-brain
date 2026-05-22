@@ -9,6 +9,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 
 from api.middleware import add_process_time_header, error_handler
 from api.routes.health import router as health_router
+from api.routes.search import router as search_router
 from config.chroma_config import init_chroma
 from storage.graph_db import init_graph_db
 
@@ -53,6 +54,7 @@ app.exception_handler(Exception)(error_handler)
 # ---------------------------------------------------------------------------
 
 app.include_router(health_router)
+app.include_router(search_router)
 
 # ---------------------------------------------------------------------------
 # Main entry point

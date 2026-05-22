@@ -28,8 +28,24 @@ class IngestVoiceRequest(BaseModel):
 
 class SearchRequest(BaseModel):
     query: str
-    limit: int = 10
-    filters: Optional[dict] = None
+    top_k: int = 10
+    include_metadata: bool = True
+
+
+class SearchResult(BaseModel):
+    doc_id: str
+    title: str
+    excerpt: str
+    relevance_score: float
+    source_type: str
+    metadata: Optional[dict] = None
+
+
+class SearchResponse(BaseModel):
+    query: str
+    results: List[SearchResult]
+    total_results: int
+    execution_time_ms: float
 
 
 class SynthesisRequest(BaseModel):
@@ -49,12 +65,6 @@ class DocumentResult(BaseModel):
     relevance_score: float
     entities: List[str]
     source: str
-
-
-class SearchResponse(BaseModel):
-    query: str
-    results: List[DocumentResult]
-    total_results: int
 
 
 class HealthResponse(BaseModel):
