@@ -48,6 +48,24 @@ class SearchResponse(BaseModel):
     execution_time_ms: float
 
 
+class AdvancedSearchRequest(BaseModel):
+    query: str
+    top_k: int = 10
+    include_metadata: bool = True
+    filters: Optional[dict] = None
+    facets: bool = False
+    sort_by: str = "relevance"
+
+
+class SearchFacet(BaseModel):
+    name: str
+    counts: dict
+
+
+class AdvancedSearchResponse(SearchResponse):
+    facets: Optional[List[SearchFacet]] = None
+
+
 class SynthesisRequest(BaseModel):
     query: str
     context_mode: Optional[str] = "cross_domain"

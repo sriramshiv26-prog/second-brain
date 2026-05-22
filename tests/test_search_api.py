@@ -82,3 +82,74 @@ def test_search_response_empty_results():
     )
     assert response.total_results == 0
     assert len(response.results) == 0
+
+
+def test_advanced_search_request_creation():
+    """Test AdvancedSearchRequest model creation."""
+    from api.models import AdvancedSearchRequest
+
+    request = AdvancedSearchRequest(
+        query="test",
+        top_k=20,
+        filters={"source_type": "pdf"},
+        facets=True,
+        sort_by="date"
+    )
+    assert request.query == "test"
+    assert request.top_k == 20
+    assert request.filters["source_type"] == "pdf"
+    assert request.facets is True
+    assert request.sort_by == "date"
+
+
+def test_advanced_search_request_defaults():
+    """Test AdvancedSearchRequest with defaults."""
+    from api.models import AdvancedSearchRequest
+
+    request = AdvancedSearchRequest(query="test")
+    assert request.top_k == 10
+    assert request.include_metadata is True
+    assert request.filters is None
+    assert request.facets is False
+    assert request.sort_by == "relevance"
+
+
+def test_search_facet_creation():
+    """Test SearchFacet model creation."""
+    from api.models import SearchFacet
+
+    facet = SearchFacet(
+        name="source_type",
+        counts={"pdf": 15, "url": 8, "file": 3}
+    )
+    assert facet.name == "source_type"
+    assert facet.counts["pdf"] == 15
+
+
+def test_advanced_search_response_with_facets():
+    """Test AdvancedSearchResponse with facets."""
+    from api.models import AdvancedSearchResponse, SearchFacet
+
+    result = SearchResult(
+        doc_id="doc_1",
+        title="Test",
+        excerpt="Test excerpt",
+        relevance_score=0.9,
+        source_type="pdf"
+    )
+
+    facet = SearchFacet(
+        name="source_type",
+        counts={"pdf": 5, "url": 3}
+    )
+
+    response = AdvancedSearchResponse(
+        query="test",
+        results=[result],
+        total_results=1,
+        execution_time_ms=100.0,
+        facets=[facet]
+    )
+
+    assert len(response.facets) == 1
+    assert response.facets[0].name == "source_type"
