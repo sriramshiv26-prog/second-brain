@@ -1,0 +1,11 @@
+{
+  "id": "second-brain-plugin",
+  "name": "Second Brain Plugin",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Integrates with a Second Brain knowledge system for semantic search and entity exploration.",
+  "author": "Your Name",
+  "authorUrl": "https://github.com/yourname",
+  "fundingUrl": "https://github.com/yourname/second-brain-plugin",
+  "isDesktopOnly": false
+}
