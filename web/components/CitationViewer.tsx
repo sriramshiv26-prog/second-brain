@@ -21,7 +21,6 @@ type CitationFormat = 'apa' | 'mla' | 'chicago' | 'bibtex';
 
 export default function CitationViewer({
   citations = [],
-  entityId = '',
   loading = false,
 }: CitationViewerProps) {
   const [selectedFormat, setSelectedFormat] = useState<CitationFormat>('apa');
