@@ -5,7 +5,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
-from storage.graph_db import get_db
+from storage.graph_db import get_graph_db
 
 router = APIRouter(prefix="/filters", tags=["filters"])
 
@@ -41,10 +41,12 @@ class FilterResponse(BaseModel):
 @router.post("/entities", response_model=FilterResponse)
 def filter_entities(request: FilterRequest):
     """Filter entities by type, mention count, and relationships."""
-    db = get_db()
+    db = get_graph_db()
 
     try:
-        entities = db.query("SELECT * FROM entities")
+        cursor = db.cursor()
+        cursor.execute("SELECT id, name, type, mention_count, definition FROM entities")
+        entities = [dict(row) for row in cursor.fetchall()]
 
         filtered = []
         for entity in entities:
@@ -96,10 +98,12 @@ def filter_entities(request: FilterRequest):
 @router.get("/facets")
 def get_facets():
     """Get available filter facets."""
-    db = get_db()
+    db = get_graph_db()
 
     try:
-        entities = db.query("SELECT * FROM entities")
+        cursor = db.cursor()
+        cursor.execute("SELECT id, name, type, mention_count, definition FROM entities")
+        entities = [dict(row) for row in cursor.fetchall()]
 
         type_counts = {}
         for entity in entities:
