@@ -2,10 +2,12 @@
 
 import time
 import logging
+import json
 from typing import List, Dict, Any
 from fastapi import APIRouter, HTTPException
 from process.embed import EmbeddingPipeline
 from storage.vector_db import VectorStore
+from api.cache import cache
 from api.models import (
     SearchRequest,
     SearchResponse,
@@ -26,10 +28,18 @@ async def semantic_search(request: SearchRequest):
 
     Query text is embedded and compared against document vectors in Chroma.
     Returns top-K results sorted by cosine similarity (relevance score).
+    Cached for 5 minutes.
     """
     start_time = time.time()
 
     try:
+        cache_key = f"search:{request.query}:{request.top_k}"
+        cached_result = cache.get(cache_key)
+
+        if cached_result:
+            logger.info(f"Cache hit for query: {request.query}")
+            return cached_result
+
         pipeline = EmbeddingPipeline()
         vector_store = VectorStore()
 
@@ -56,14 +66,18 @@ async def semantic_search(request: SearchRequest):
 
         elapsed = (time.time() - start_time) * 1000
 
-        logger.info(f"Search completed in {elapsed:.2f}ms, found {len(search_results)} results")
-
-        return SearchResponse(
+        response = SearchResponse(
             query=request.query,
             results=search_results,
             total_results=len(search_results),
             execution_time_ms=elapsed,
         )
+
+        cache.set(cache_key, response, ttl_seconds=300)
+
+        logger.info(f"Search completed in {elapsed:.2f}ms, found {len(search_results)} results")
+
+        return response
 
     except Exception as e:
         logger.error(f"Search failed: {e}")
