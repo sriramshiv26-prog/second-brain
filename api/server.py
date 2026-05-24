@@ -19,6 +19,8 @@ from api.routes.ws import router as ws_router
 from api.routes.docs import router as docs_router
 from api.routes.analytics import router as analytics_router
 from api.routes.wiki import router as wiki_router
+from api.routes.contradictions import router as contradictions_router
+from api.routes.synthesis import router as synthesis_router
 from api.auth.models import init_auth_db
 from config.chroma_config import init_chroma
 from storage.graph_db import init_graph_db
@@ -75,6 +77,8 @@ app.include_router(ws_router)
 app.include_router(docs_router)
 app.include_router(analytics_router)
 app.include_router(wiki_router)
+app.include_router(contradictions_router)
+app.include_router(synthesis_router)
 
 # ---------------------------------------------------------------------------
 # Main entry point
