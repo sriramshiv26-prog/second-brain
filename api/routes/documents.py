@@ -4,6 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from pydantic import BaseModel
 import mimetypes
+from api.synthesis_service import get_synthesis_service
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -67,15 +68,36 @@ async def upload_document(file: UploadFile = File(...)) -> DocumentMetadata:
 
 
 @router.post("/process/{document_id}")
-def process_document(document_id: str) -> DocumentProcessingResult:
-    """Process an uploaded document (extract text, entities, etc)."""
-    return DocumentProcessingResult(
-        document_id=document_id,
-        status="processing",
-        extracted_text="Document processing in progress...",
-        entities_found=0,
-        chunks_created=0,
-    )
+async def process_document(document_id: str, entities: Optional[List[dict]] = None) -> dict:
+    """Process an uploaded document (extract text, entities, etc).
+
+    NEW (Phase 6): Triggers synthesis service to auto-create wiki pages.
+    """
+    try:
+        # Extract entities from document
+        # (In production, this would call document processing pipeline)
+        extracted_entities = entities or []
+
+        # NEW: Integrate into wiki system
+        synthesis_service = get_synthesis_service()
+        wiki_mapping = await synthesis_service.integrate_document(
+            doc_id=document_id,
+            entities=extracted_entities,
+            doc_title=f"Document {document_id}"
+        )
+
+        return {
+            "document_id": document_id,
+            "status": "processed",
+            "entities_found": len(extracted_entities),
+            "wiki_pages_created": wiki_mapping,
+            "wiki_pages_count": len(wiki_mapping),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Document processing failed: {str(e)}"
+        )
 
 
 @router.get("/list")
