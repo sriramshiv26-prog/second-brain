@@ -33,7 +33,6 @@ export default function WikiPageView() {
   // Fetch backlinks
   const {
     data: backlinks = [],
-    isLoading: backlinksLoading,
   } = useQuery({
     queryKey: ['wiki-backlinks', slug],
     queryFn: () => (slug ? wikiAPI.getBacklinks(slug) : Promise.resolve([])),
