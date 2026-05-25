@@ -74,13 +74,13 @@ function GraphPageContent() {
           {data && (
             <D3GraphVisualization
               data={{
-                nodes: data.nodes.map((n) => ({
+                nodes: data.nodes.map((n: any) => ({
                   id: n.id,
                   label: n.name,
                   type: n.type,
                   size: 10,
                 })),
-                edges: data.edges.map((e) => ({
+                edges: data.edges.map((e: any) => ({
                   source: e.source_id,
                   target: e.target_name || '',
                   label: e.relationship_type,
