@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import WikiViewer from '@/components/wiki/WikiViewer';
 import { wikiAPI } from '@/lib/api';
 
@@ -14,7 +14,6 @@ import { wikiAPI } from '@/lib/api';
  * Desktop: Sidebar with backlinks visible
  */
 export default function WikiPageView() {
-  const router = useRouter();
   const params = useParams();
   const slug = params?.slug as string;
   const [showSidebar, setShowSidebar] = useState(false);

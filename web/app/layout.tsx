@@ -1,10 +1,16 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
+import PWAInitializer from '@/components/PWAInitializer';
 
 export const metadata: Metadata = {
   title: 'Second Brain',
   description: 'Personal knowledge management system',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+  },
 };
 
 export default function RootLayout({
@@ -14,7 +20,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Wiki" />
+      </head>
       <body className="bg-white">
+        <PWAInitializer />
         <Providers>
           <nav className="bg-gray-900 text-white shadow-lg">
             <div className="max-w-7xl mx-auto px-4 py-4">
